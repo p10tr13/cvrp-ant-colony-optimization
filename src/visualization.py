@@ -32,7 +32,7 @@ def compare_solutions(instance: CVRPInstance, solution1: CVRPSolution, solution2
         ax.scatter(coords[instance.depot_id - 1, 0], coords[instance.depot_id - 1, 1], 
                    color='black', marker='s', s=80, zorder=5)
         
-        colors = plt.cm.get_cmap('hsv')(np.linspace(0, 1, len(res.routes)))
+        colors = plt.cm.get_cmap('hsv')(np.linspace(0, 1, len(res.routes) + 1))
         for i, route in enumerate(res.routes):
             full_route = [instance.depot_id - 1] + route + [instance.depot_id - 1]
             ax.plot(coords[full_route, 0], coords[full_route, 1], color=colors[i], alpha=0.8)
