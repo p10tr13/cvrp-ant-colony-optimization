@@ -1,6 +1,6 @@
 from src.parser import parse_vrp_file, parse_sol_file
 from src.utils import calculate_distance_matrix
-from src.visualization import visualize_solution
+from src.visualization import visualize_solution, compare_solutions
 
 def main():
     path = "data/A-n32-k5.vrp"
@@ -25,7 +25,7 @@ def main():
     print(f"Total Distance: {solution.total_distance}")
 
     visualize_solution(instance, solution)
-
+    compare_solutions(instance, solution, solution)
 
 if __name__ == "__main__":
     main()
