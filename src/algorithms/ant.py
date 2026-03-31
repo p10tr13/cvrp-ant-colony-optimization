@@ -58,6 +58,14 @@ class Ant:
                     tau = self.pheromones[current_node][next_node]
                     eta = 1.0 / distance_to_next if distance_to_next > 0 else 0
                     probabilities.append(pow(tau, self.alpha) * pow(eta, self.beta))
+
+            if current_node != self.instance.depot_id - 1 and candidates:
+                depot_ind = self.instance.depot_id - 1
+                distance_to_depot = self.distance_matrix[current_node][depot_ind]
+                candidates.append(depot_ind)
+                tau_depot = self.pheromones[current_node][depot_ind]
+                eta_depot = 1.0 / distance_to_depot if distance_to_depot > 0 else 0
+                probabilities.append(pow(tau_depot, self.alpha) * pow(eta_depot, self.beta))
             
             if not candidates:
                 current_distance += self.distance_matrix[current_node][self.instance.depot_id - 1]
@@ -68,8 +76,12 @@ class Ant:
 
             next_node = np.random.choice(candidates, p=probabilities)
 
-            route.append(next_node)
-            self.visited.add(next_node)
-            current_load += self.instance.demands[next_node]
-            current_distance += self.distance_matrix[current_node][next_node]
-            current_node = next_node
+            if next_node == self.instance.depot_id - 1:
+                current_distance += self.distance_matrix[current_node][self.instance.depot_id - 1]
+                return route, current_distance
+            else:
+                route.append(next_node)
+                self.visited.add(next_node)
+                current_load += self.instance.demands[next_node]
+                current_distance += self.distance_matrix[current_node][next_node]
+                current_node = next_node
