@@ -13,12 +13,14 @@ class MMAS(ACOBase):
         if not self.best_result:
             return
         
+        iterations_best_route, iterations_best_distance = min(results, key=lambda x: x[1])
+
         self.tau_max = 1.0 / (self.rho * self.best_result.total_distance)
-        self.tau_min = self.tau_max / 20
+        self.tau_min = self.tau_max / 20.0
 
-        delta = 1.0 / self.best_result.total_distance
+        delta = 1.0 / iterations_best_distance
 
-        for route in self.best_result.routes:
+        for route in iterations_best_route:
             node = self.instance.depot_id - 1
 
             for next in route:
