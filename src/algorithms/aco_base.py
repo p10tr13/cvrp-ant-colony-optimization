@@ -43,7 +43,7 @@ class ACOBase:
             self.pheromones *= (1 - self.rho)
             self._update_pheromones(results)
 
-            print(f"Iteration {i}: best solution found: {self.best_result.total_distance if self.best_result else 'None'}")
+            #print(f"Iteration {i}: best solution found: {self.best_result.total_distance if self.best_result else 'None'}")
 
         if self.best_result:
             self.best_result.computation_time = time.time() - start

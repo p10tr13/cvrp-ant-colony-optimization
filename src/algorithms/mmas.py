@@ -10,7 +10,7 @@ class MMAS(ACOBase):
         self.tau_min = 0.001
 
     def _update_pheromones(self, results):
-        if not self.best_result:
+        if not self.best_result or not results:
             return
         
         iterations_best_route, iterations_best_distance = min(results, key=lambda x: x[1])
