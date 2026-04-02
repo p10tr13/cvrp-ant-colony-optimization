@@ -1,4 +1,5 @@
 data
+not_used_data
 .vscode
 src/__pycache__/
 *.pyc

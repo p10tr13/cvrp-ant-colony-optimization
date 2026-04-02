@@ -15,7 +15,7 @@ def main():
         solvers_map=aco_solvers,
         seeds=range(1, 11),
         test_name="solution_quality_test",
-        s_max_multiplier=1.25
+        s_max_multiplier=float('inf')
     )
 
 if __name__ == "__main__":

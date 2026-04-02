@@ -44,7 +44,7 @@ def run_solution_quality_test(data_dir, solvers_map, seeds, test_name, s_max_mul
             'beta': 4.0,
             'rho': 0.5,
             's_max': s_max_value,
-            'k_vehicles': k,
+            'num_vehicles': k,
             'w_rank': 6
         }
 
