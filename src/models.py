@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Optional
 import numpy as np
 
 @dataclass
@@ -19,3 +19,4 @@ class CVRPSolution:
     total_distance: float
     computation_time: float
     seed: int
+    iteration_history: Optional[List[float]] = field(default=None)

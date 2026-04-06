@@ -91,3 +91,65 @@ def run_solution_quality_test(data_dir, solvers_map, seeds, test_name, s_max_mul
     
     print(f"\nTESTS ENDED. Results saved in: {save_path}")
     return df
+
+def run_h3_convergence_test(data_dir, solvers_map, seeds, s_max_multiplier=1.25):
+    """
+    H3 convergence test. Saves results from every iteration of AS and ASRank.
+    """
+    target_dir = os.path.join("results", "h3")
+    os.makedirs(target_dir, exist_ok=True)
+    
+    files = [f for f in os.listdir(data_dir) if f.endswith('.vrp')]
+    
+    target_solvers = {k: v for k, v in solvers_map.items() if k in ['BasicAntSystem', 'ASRank']}
+    
+    for filename in tqdm(files, desc="Running H3 convergence tests", unit="file"):
+        instance_path = os.path.join(data_dir, filename)
+        instance = parse_vrp_file(instance_path)
+        distance_matrix = calculate_distance_matrix(instance)
+        n, k = parse_parameters_from_filename(filename)
+
+        if k is None or n is None:
+            print('Not able to parse filename')
+            continue
+        
+        sol_path = instance_path.replace('.vrp', '.sol')
+        solution = parse_sol_file(sol_path) if os.path.exists(sol_path) else None
+        s_max_value = calculate_s_max_from_bks(instance, solution.routes, distance_matrix, s_max_multiplier)
+        
+        instance_convergence_data = []
+        
+        params = {
+            'iterations': 200,
+            'num_ants': n,
+            'alpha': 1.0,
+            'beta': 4.0,
+            'rho': 0.5,
+            's_max': s_max_value,
+            'num_vehicles': k,
+            'record_history': True,
+            'w_rank': 6
+        }
+
+        for algo_name, SolverClass in target_solvers.items():
+            for seed in tqdm(seeds, desc=f"  -> {algo_name}", leave=False, unit="run"):
+                np.random.seed(seed)
+                solver = SolverClass(instance, distance_matrix, params)
+                result = solver.solve()
+                
+                if result and result.iteration_history:
+                    for i, cost in enumerate(result.iteration_history):
+                        instance_convergence_data.append({
+                            'Algorithm': algo_name,
+                            'Seed': seed,
+                            'Iteration': i + 1,
+                            'Best_Cost': cost
+                        })
+
+        if instance_convergence_data:
+            df = pd.DataFrame(instance_convergence_data)
+            save_name = f"{filename.replace('.vrp', '')}_h3.csv"
+            save_path = os.path.join(target_dir, save_name)
+            df.to_csv(save_path, index=False)
+            
+    print(f"\nTESTS ENDED. Results saved in: {target_dir}")

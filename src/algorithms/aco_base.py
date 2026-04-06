@@ -14,12 +14,14 @@ class ACOBase:
         self.rho = parameters.get('rho', 0.2)
         self.s_max = parameters.get('s_max', float('inf'))
         self.num_vehicles = parameters.get('num_vehicles', 5)
+        self.record_history = parameters.get('record_history', False)
 
         self.pheromones = np.full((instance.dimension, instance.dimension), 1.0)
         self.best_result = None
 
     def solve(self) -> CVRPSolution:
         start = time.time()
+        history = []
 
         for i in range(self.iterations):
             ants = [Ant(self.instance, self.distance_matrix, self.pheromones, self.alpha, self.beta, self.s_max, self.num_vehicles) for _ in range(self.num_ants)]
@@ -43,12 +45,16 @@ class ACOBase:
             self.pheromones *= (1 - self.rho)
             self._update_pheromones(results)
 
+            if self.record_history:
+                history.append(self.best_result.total_distance if self.best_result else float('inf'))
+
             #print(f"Iteration {i}: best solution found: {self.best_result.total_distance if self.best_result else 'None'}")
 
         if self.best_result:
             self.best_result.computation_time = time.time() - start
+            self.best_result.iteration_history = history
             return self.best_result
-        return CVRPSolution('','',[],0.0,0.0,-1)
+        return CVRPSolution('','',[],0.0,time.time() - start,-1, history)
 
     def _update_pheromones(self, results):
         raise NotImplementedError("Pheromones update should be implemented in algorithm specific subclasses.")
