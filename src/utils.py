@@ -35,7 +35,7 @@ def calculate_route_distance(route, distance_matrix):
     return total_distance
 
 def parse_parameters_from_filename(filename):
-    match = re.search(r'n(\d+)-k(\d)', filename)
+    match = re.search(r'n(\d+)-k(\d+)', filename)
     if match:
         return int(match.group(1)), int(match.group(2))
     return None, None
