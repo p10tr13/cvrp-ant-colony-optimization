@@ -19,7 +19,7 @@ class GreedyCVRPSolver:
         total_distance = 0
 
         for v in range(self.num_vehicles):
-            if unvisited.count == 0:
+            if not unvisited:
                 break
 
             current_route = []
@@ -48,12 +48,18 @@ class GreedyCVRPSolver:
                         break
 
                 if not found_next:
-                    current_distance += self.distance_matrix[current_node][self.instance.depot_id - 1]
                     break
-            
-            if current_route.count != 0:
+
+            # Every route ends back at the depot, including the one that served the last customer
+            current_distance += self.distance_matrix[current_node][self.instance.depot_id - 1]
+
+            if current_route:
                 routes.append(current_route)
                 total_distance += current_distance
+
+        # Customers left over after all vehicles are used: no feasible solution
+        if unvisited:
+            total_distance = float('inf')
 
         end_time = time.time()
 

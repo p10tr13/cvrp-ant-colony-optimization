@@ -7,11 +7,11 @@ class ACOBase:
     def __init__(self, instance: CVRPInstance, distance_matrix: np.ndarray, parameters):
         self.instance = instance
         self.distance_matrix = distance_matrix
-        self.iterations = parameters.get('iterations', 100)
-        self.num_ants = parameters.get('num_ants', 32)
+        self.iterations = parameters.get('iterations', 200)
+        self.num_ants = parameters.get('num_ants', 39)
         self.alpha = parameters.get('alpha', 1.0)
-        self.beta = parameters.get('beta', 4.0)
-        self.rho = parameters.get('rho', 0.2)
+        self.beta = parameters.get('beta', 3.0)
+        self.rho = parameters.get('rho', 0.5)
         self.s_max = parameters.get('s_max', float('inf'))
         self.num_vehicles = parameters.get('num_vehicles', 5)
         self.record_history = parameters.get('record_history', False)
@@ -54,7 +54,8 @@ class ACOBase:
             self.best_result.computation_time = time.time() - start
             self.best_result.iteration_history = history
             return self.best_result
-        return CVRPSolution('','',[],0.0,time.time() - start,-1, history)
+        # No ant built a feasible solution: report it as infinite distance, not 0
+        return CVRPSolution(self.__class__.__name__, self.instance.name, [], float('inf'), time.time() - start, -1, history)
 
     def _update_pheromones(self, results):
         raise NotImplementedError("Pheromones update should be implemented in algorithm specific subclasses.")

@@ -19,8 +19,6 @@ class Ant:
         self.routes = []
         self.total_distance = 0
 
-        all_nodes = set(range(self.instance.dimension))
-
         for _ in range(self.num_vehicles):
             if len(self.visited) == self.instance.dimension:
                 break

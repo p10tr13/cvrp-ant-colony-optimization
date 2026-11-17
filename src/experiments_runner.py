@@ -55,7 +55,7 @@ def run_solution_quality_test(data_dir, solvers_map, seeds, test_name, s_max_mul
             'Instance': filename,
             'Algorithm': 'Greedy',
             'Seed': 0,
-            'Distance': res_greedy.total_distance,
+            'Distance': res_greedy.total_distance if np.isfinite(res_greedy.total_distance) else np.nan,
             'Time': res_greedy.computation_time,
             'S_max': s_max_value
         })
@@ -71,7 +71,8 @@ def run_solution_quality_test(data_dir, solvers_map, seeds, test_name, s_max_mul
                     'Instance': filename,
                     'Algorithm': algo_name,
                     'Seed': seed,
-                    'Distance': result.total_distance,
+                    # NaN marks a run without a feasible solution, so it is left out of the means
+                    'Distance': result.total_distance if np.isfinite(result.total_distance) else np.nan,
                     'Time': result.computation_time,
                     'S_max': s_max_value
                 })
