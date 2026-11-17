@@ -23,10 +23,10 @@ class MMAS(ACOBase):
         for route in iterations_best_route:
             node = self.instance.depot_id - 1
 
-            for next in route:
-                self.pheromones[node][next] += delta
-                self.pheromones[next][node] += delta
-                node = next
+            for next_node in route:
+                self.pheromones[node][next_node] += delta
+                self.pheromones[next_node][node] += delta
+                node = next_node
             self.pheromones[node][self.instance.depot_id - 1] += delta
             self.pheromones[self.instance.depot_id - 1][node] += delta
         

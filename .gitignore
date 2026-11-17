@@ -1,6 +1,8 @@
-data
 not_used_data
 .vscode
-src/__pycache__/
+.venv/
+__pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
+results/plots/
